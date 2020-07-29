@@ -1,9 +1,9 @@
-#include <algorithm>
-#include <iostream>
-#include <sstream>
-#include <list>
-#include <vector>
-#include <string>
+#include <algorithm>					//Assumptions:
+#include <iostream>						//Assume no more than two matching files when searching
+#include <sstream>						//Assumption of passing the tree with function
+#include <list>							//
+#include <vector>						//
+#include <string>						//
 
 using namespace std;
 
@@ -47,9 +47,9 @@ public:
 	void inorder(File*);
 	File* AddFolder(File* t, string path, string folderName);										//DONE 
 	void DeleteFolder(string path, string folderName);												//Required //Come back
-	File* AddFile(File* t, string path, string fileName, int size);									//ALMOST done, add changing size functions
+	File* AddFile(File* t, string path, string fileName, int size);									//Add changing size functions
 	File GetFile(File* t, string path, string fileName);											//DONE
-	list<File> GetFiles(list<File> files, File* t, string path, string fileName);					//DONE (size?)
+	list<File> GetFiles(list<File> files, File* t, string path, string fileName);					//DONE 
 	void DeleteFile(string path, string fileName);													//Come back
 
 	string ParsePath(string path);
@@ -68,9 +68,7 @@ string AVL_Tree::ParsePath(string path) {
 	return folders.back();
 }
 
-list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fileName) { //FIX ME NOT DONE //Assume no more than two matching files
-	//string temp;
-	//temp = t->name.substr(0, fileName.size());
+list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fileName) {  
 	if (t->left != NULL && t->right != NULL) {
 		if ((t->left->name.substr(0, fileName.size()) == fileName) && (t->right->name.substr(0, fileName.size()) == fileName)) {
 			File r;
@@ -96,8 +94,8 @@ list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fil
 		return GetFiles(files, t->right, path, fileName);
 	}
 	else {
-		if (t->left->name < t->name) {
-			return GetFiles(files, t->left, path, fileName);
+		if (t->left->name < t->name) {								//For when the search term is too short to compare file names
+			return GetFiles(files, t->left, path, fileName);		//the function enters this else suite to keep transcending
 		}
 		else {
 			return GetFiles(files, t->right, path, fileName);
@@ -120,7 +118,6 @@ File AVL_Tree::GetFile(File* t, string path, string fileName) {
 		r = GetFile(t->right, parentName, fileName);
 	}
 	return r;
-
 }
  
 File* AVL_Tree::AddFile(File* r, string path, string fileName, int size=0) {
@@ -147,10 +144,10 @@ File* AVL_Tree::AddFile(File* r, string path, string fileName, int size=0) {
 }
 
 //Adds a folder given the path
-File* AVL_Tree::AddFolder(File* r, string path, string folderName) {      //Assumption of passing the tree with function
+File* AVL_Tree::AddFolder(File* r, string path, string folderName) {      
 	string filePath;
 	filePath = ParsePath(path);
-	if (r == NULL) {			//Base Case
+	if (r == NULL) {			
 		r = new File;
 		r->parentFolder = filePath;
 		r->name = folderName;
@@ -167,22 +164,12 @@ File* AVL_Tree::AddFolder(File* r, string path, string folderName) {      //Assu
 		r = Balance(r);
 	}
 	return r;
-																		  
-																		  
-	/*if (path == "none") {			//Base Case
-		File r;
-		r = File("none", folderName);
-	}
-	else {
-		string parent;
-		parent = ParsePath(path);
-	}*/
 }
 
 File* AVL_Tree::Insert(File* r, string name, int size = 0) {
-	if (r == NULL) {			//Base Case
+	if (r == NULL) {
 		r = new File;
-		r->parentFolder = //
+		r->parentFolder = "";
 		r->size = size;
 		r->name = name;
 		r->left = NULL;
@@ -256,7 +243,6 @@ File* AVL_Tree::Balance(File* t) {
 		}
 		else {
 			t = LR_Rotate(t);
-
 		}
 	}
 	else if (bal_factor < -1) {
@@ -266,15 +252,14 @@ File* AVL_Tree::Balance(File* t) {
 		else {
 			t = RR_Rotate(t);
 		}
-
 	}
 	return t;
 }
 
-void AVL_Tree::inorder(File* t) {		//
-	if (t == NULL)						//
-		return;							//
-	inorder(t->left);					//
-	cout << t->name << " ";				//
-	inorder(t->right);					//
+void AVL_Tree::inorder(File* t) {
+	if (t == NULL)						
+		return;							
+	inorder(t->left);					
+	cout << t->name << " ";				
+	inorder(t->right);					
 }
