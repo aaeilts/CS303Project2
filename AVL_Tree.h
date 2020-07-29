@@ -18,7 +18,6 @@ struct File {
 		return file2;
 	}
 	File();
-	//File(string name);
 	File(string parent, string name, int size);
 	
 }*fl;
@@ -34,13 +33,7 @@ File::File(string name, string parent = "", int size=0) {
 	this->left = NULL;
 	this->right = NULL;
 }
-/*
-File::File(string name) {
-	this->size = 0;
-	this->name = name;
-	this->parentFolder = "";
-}
-*/
+
 class AVL_Tree {
 public:
 	int Height(File*);
@@ -52,12 +45,12 @@ public:
 	File* Balance(File*);
 	File* Insert(File*, string, int);				
 	void inorder(File*);
-	File* AddFolder(File* t, string path, string folderName);			//DONE 
-	void DeleteFolder(string path, string folderName);					//Required
-	File* AddFile(File* t, string path, string fileName, int size);		//ALMOST done, add changing size functions
-	File GetFile(string path, string fileName);							//Required /MEE
-	list<File> GetFiles(string path, string fileName);					//Required /MEE
-	void DeleteFile(string path, string fileName);						//Required
+	File* AddFolder(File* t, string path, string folderName);										//DONE 
+	void DeleteFolder(string path, string folderName);												//Required //Come back
+	File* AddFile(File* t, string path, string fileName, int size);									//ALMOST done, add changing size functions
+	File GetFile(File* t, string path, string fileName);											//MEE
+	list<File> GetFiles(list<File> files, File* t, string path, string fileName);					//MEE
+	void DeleteFile(string path, string fileName);													//Come back
 
 	string ParsePath(string path);
 	void ChangeSize(); //Goes in add file function, 
@@ -75,11 +68,43 @@ string AVL_Tree::ParsePath(string path) {
 	return folders.back();
 }
 
+list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fileName) { //FIX ME NOT DONE
+	string parentName, temp;
+	File r;
+	parentName = ParsePath(path);
+	temp = t->name.substr(0, fileName.size());
+	if (temp == fileName) {
+		r = *t;
+		files.push_back(r);	
+	}
+	if (t->left == NULL && t->right == NULL) {
 
-File AVL_Tree::GetFile(string path, string fileName) {					//Required
-	
+	}
+	else if (fileName < t->name) {
+		 files = GetFiles(files, t->left, parentName, fileName);
+	}
+	else if (fileName >= t->name) {
+		files = GetFiles(files, t->right, parentName, fileName);
+	}
 }
 
+File AVL_Tree::GetFile(File* t, string path, string fileName) {		
+	string parentName;
+	File r;
+	parentName = ParsePath(path);
+	if (t->name == fileName) {
+		r = *t;
+		return r;
+	}
+	else if (fileName < t->name) {
+		r = GetFile(t->left, parentName, fileName);
+	}
+	else if (fileName >= t->name){
+		r = GetFile(t->right, parentName, fileName);
+	}
+	return r;
+
+}
  
 File* AVL_Tree::AddFile(File* r, string path, string fileName, int size=0) {
 	string filePath;
