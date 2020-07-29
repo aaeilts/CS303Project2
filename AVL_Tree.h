@@ -48,8 +48,8 @@ public:
 	File* AddFolder(File* t, string path, string folderName);										//DONE 
 	void DeleteFolder(string path, string folderName);												//Required //Come back
 	File* AddFile(File* t, string path, string fileName, int size);									//ALMOST done, add changing size functions
-	File GetFile(File* t, string path, string fileName);											//MEE
-	list<File> GetFiles(list<File> files, File* t, string path, string fileName);					//MEE
+	File GetFile(File* t, string path, string fileName);											//DONE
+	list<File> GetFiles(list<File> files, File* t, string path, string fileName);					//DONE (size?)
 	void DeleteFile(string path, string fileName);													//Come back
 
 	string ParsePath(string path);
@@ -68,23 +68,40 @@ string AVL_Tree::ParsePath(string path) {
 	return folders.back();
 }
 
-list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fileName) { //FIX ME NOT DONE
-	string parentName, temp;
-	File r;
-	parentName = ParsePath(path);
-	temp = t->name.substr(0, fileName.size());
-	if (temp == fileName) {
+list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fileName) { //FIX ME NOT DONE //Assume no more than two matching files
+	//string temp;
+	//temp = t->name.substr(0, fileName.size());
+	if (t->left != NULL && t->right != NULL) {
+		if ((t->left->name.substr(0, fileName.size()) == fileName) && (t->right->name.substr(0, fileName.size()) == fileName)) {
+			File r;
+			r = *t->left;				//ABOVE IF STATEMENT ONLY EXECUTES WHEN BOTH LEFT AND RIGHT CHILDREN MATCH SEARCH
+			files.push_back(r);
+			r = *t->right;
+			files.push_back(r);
+			return files;
+		}
+	}
+	if (t->name.substr(0, fileName.size()) == fileName) {
+		File r;
 		r = *t;
-		files.push_back(r);	
+		files.push_back(r);
 	}
-	if (t->left == NULL && t->right == NULL) {
-
+	if (t->left == NULL && t->right == NULL) {   //If a leaf
+		return files;
 	}
-	else if (fileName < t->name) {
-		 files = GetFiles(files, t->left, parentName, fileName);
+	else if (fileName < t->name.substr(0, fileName.size())) {  //If less than search term
+		 return GetFiles(files, t->left, path, fileName);
 	}
-	else if (fileName >= t->name) {
-		files = GetFiles(files, t->right, parentName, fileName);
+	else if (fileName > t->name.substr(0, fileName.size())) {  //Greater than search term
+		return GetFiles(files, t->right, path, fileName);
+	}
+	else {
+		if (t->left->name < t->name) {
+			return GetFiles(files, t->left, path, fileName);
+		}
+		else {
+			return GetFiles(files, t->right, path, fileName);
+		}
 	}
 }
 

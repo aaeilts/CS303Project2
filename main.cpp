@@ -12,16 +12,17 @@ int main() {
 	fl = FileSystem.AddFolder(fl, "documents", "programming");
 	fl = FileSystem.AddFolder(fl, "documents/programming", "data_struct");
 	fl = FileSystem.AddFolder(fl, "documents/programming/data_struct", "project");
-	fl = FileSystem.AddFile(fl, "documents/programming/data_struct", "assignment", 10);
+	fl = FileSystem.AddFile(fl, "documents/programming/data_struct", "assignment1", 10);
+	fl = FileSystem.AddFile(fl, "documents/programming/data_struct", "assignment2", 15);
 	//FileSystem.inorder(fl);
 	cout << endl;
-	wanted = FileSystem.GetFile(fl, "documents / programming / data_struct", "assignment");
+	wanted = FileSystem.GetFile(fl, "documents/programming/data_struct", "assignment1");
 	//cout << wanted.name << endl;
-	files = FileSystem.GetFiles(files, fl, "documents / programming / data_struct", "d");
-	for (auto v : files)
-		std::cout << v.name << "\n";
+	files = FileSystem.GetFiles(files, fl, "documents /programming/data_struct", "assi");
+	for (auto v : files)							//These two lines are just for printing
+		std::cout << v.name << "\n";				//out the list of files
 	
-	//FileSystem.Show(fl, 2); //Testing??
+	
 	
 
 
