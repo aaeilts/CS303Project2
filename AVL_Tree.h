@@ -52,15 +52,15 @@ public:
 	File* Balance(File*);
 	File* Insert(File*, string, int);				
 	void inorder(File*);
-	File* AddFolder(File* t, string path, string folderName);				//Required
-	void DeleteFolder(string path, string folderName);			//Required
-	void AddFile(string path, string fileName, int size);		//Required
-	File GetFile(string path, string fileName);					//Required
-	list<File> GetFiles(string path, string fileName);			//Required
-	void DeleteFile(string path, string fileName);				//Required
-	void AddAttempt(File* t);
+	File* AddFolder(File* t, string path, string folderName);			//DONE 
+	void DeleteFolder(string path, string folderName);					//Required
+	File* AddFile(File* t, string path, string fileName, int size);		//ALMOST done, add changing size functions
+	File GetFile(string path, string fileName);							//Required /MEE
+	list<File> GetFiles(string path, string fileName);					//Required /MEE
+	void DeleteFile(string path, string fileName);						//Required
 
 	string ParsePath(string path);
+	void ChangeSize(); //Goes in add file function, 
 };
 
 //Returns final folder name
@@ -76,15 +76,32 @@ string AVL_Tree::ParsePath(string path) {
 }
 
 
-/*File AVL_Tree::GetFile(string path, string fileName) {					//Required
-	string folderName;
-	folderName = ParsePath(path);
+File AVL_Tree::GetFile(string path, string fileName) {					//Required
+	
+}
 
-	return  //return parent folder's size?
-}*/
-
-void AVL_Tree::AddAttempt(File* t) {
-
+ 
+File* AVL_Tree::AddFile(File* r, string path, string fileName, int size=0) {
+	string filePath;
+	filePath = ParsePath(path);
+	if (r == NULL) {			//Base Case
+		r = new File;
+		r->size = size;
+		r->parentFolder = filePath;
+		r->name = fileName;
+		r->left = NULL;
+		r->right = NULL;
+		return r;
+	}
+	else if (fileName < r->name) {
+		r->left = AddFolder(r->left, filePath, fileName);
+		r = Balance(r);
+	}
+	else if (fileName >= r->name) {
+		r->right = AddFolder(r->right, filePath, fileName);
+		r = Balance(r);
+	}
+	return r;
 }
 
 //Adds a folder given the path
@@ -119,7 +136,6 @@ File* AVL_Tree::AddFolder(File* r, string path, string folderName) {      //Assu
 		parent = ParsePath(path);
 	}*/
 }
-
 
 File* AVL_Tree::Insert(File* r, string name, int size = 0) {
 	if (r == NULL) {			//Base Case
@@ -213,29 +229,10 @@ File* AVL_Tree::Balance(File* t) {
 	return t;
 }
 
-
-
 void AVL_Tree::inorder(File* t) {		//
-	if (t == NULL)					//
+	if (t == NULL)						//
 		return;							//
 	inorder(t->left);					//
 	cout << t->name << " ";				//
 	inorder(t->right);					//
 }
-
-//FIX ME [Change to compare NAMES instead of size?] [WHAT IS 'int left', is it height of tree?]
-/*void AVL_Tree::Show(File* p, int left) {
-	int i;
-	if (p != nullptr) {
-		Show(p->right, left + 1);
-		cout << " ";
-		if (p == fl) {
-			cout << "Root -> ";
-		}
-		for (i = 0; i < left && p != fl; i++) {
-			cout << " ";
-			cout << p->name;                   // Changed from size to name
-			Show(p->left, left + 1);
-		}
-	}
-}*/

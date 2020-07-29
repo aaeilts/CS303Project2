@@ -13,6 +13,7 @@ int main() {
 	fl = FileSystem.AddFolder(fl, "documents/programming", "data_struct");
 	//FileSystem.inorder(fl);
 	fl = FileSystem.AddFolder(fl, "documents/programming/data_struct", "project");
+	fl = FileSystem.AddFile(fl, "documents/programming/data_struct", "assignment", 10);
 	FileSystem.inorder(fl);
 	
 	
