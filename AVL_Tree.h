@@ -1,7 +1,7 @@
 #include <algorithm>					//Assumptions:
 #include <iostream>						//Assume no more than two matching files when searching
 #include <sstream>						//Assumption of passing the tree with function
-#include <list>							//
+#include <list>							//Assumption that folders were built sequentially one at a time
 #include <vector>						//
 #include <string>						//
 
@@ -24,7 +24,11 @@ struct File {
 bool operator==(File& file1, File& file2) { //Comparison overload for comparing names
 	return (file1.name == file2.name);
 }
-File::File() {};
+File::File() {
+	size = 0;
+	left = NULL;
+	right = NULL;
+};
 
 File::File(string name, string parent = "", int size=0) {
 	this->parentFolder = parent;
@@ -50,11 +54,60 @@ public:
 	File* AddFile(File* t, string path, string fileName, int size);									//Add changing size functions
 	File GetFile(File* t, string path, string fileName);											//DONE
 	list<File> GetFiles(list<File> files, File* t, string path, string fileName);					//DONE 
-	void DeleteFile(string path, string fileName);													//Come back
+	void DeleteFile(File* t, string path, string fileName);											//Come back
 
 	string ParsePath(string path);
 	void ChangeSize(); //Goes in add file function, 
 };
+
+void AVL_Tree::DeleteFile(File* t, string path, string fileName) {
+	if (t == NULL) {
+		cout << "File not found";
+	}
+	if (fileName < t->name) {
+		DeleteFile(t->left, path, fileName);
+	}
+	else if (fileName > t->name) {
+		DeleteFile(t->right, path, fileName);
+	}
+	else {
+		if ((t->left == NULL) || (t->right == NULL)) { //Node with only one child or no child
+			if ((t->left == NULL) && (t->right == NULL)) {
+				t = NULL;
+			}
+			else {
+				File* temp;
+				temp = NULL;
+				if (t->left == NULL) {
+					temp = NULL;
+				}
+				else if (t->left != NULL) {
+					temp = t->left;
+				}
+				if (t->right == NULL) {
+					t->left = NULL;
+				}
+				else if (t->right != NULL) {
+					t->left = t->right;
+				}
+				if (temp == NULL) { //No child case?
+					temp = t;
+					t = NULL;
+				}
+				else {
+					*t = *temp;
+				}
+				free(temp);
+			}
+		}
+		else {
+			File* temp = t->right;
+			t->name = temp->name;
+			DeleteFile(t->right, path, temp->name);
+
+		}
+	}
+}
 
 //Returns final folder name
 string AVL_Tree::ParsePath(string path) {
@@ -144,47 +197,47 @@ File* AVL_Tree::AddFile(File* r, string path, string fileName, int size=0) {
 }
 
 //Adds a folder given the path
-File* AVL_Tree::AddFolder(File* r, string path, string folderName) {      
+File* AVL_Tree::AddFolder(File* t, string path, string folderName) {      
 	string filePath;
 	filePath = ParsePath(path);
-	if (r == NULL) {			
-		r = new File;
-		r->parentFolder = filePath;
-		r->name = folderName;
-		r->left = NULL;
-		r->right = NULL;
-		return r;
+	if (t == NULL) {			
+		t = new File;
+		t->parentFolder = filePath;
+		t->name = folderName;
+		t->left = NULL;
+		t->right = NULL;
+		return t;
 	}
-	else if (folderName < r->name) {
-		r->left = AddFolder(r->left, filePath, folderName);
-		r = Balance(r);
+	else if (folderName < t->name) {
+		t->left = AddFolder(t->left, filePath, folderName);
+		t = Balance(t);
 	}
-	else if (folderName >= r->name) {
-		r->right = AddFolder(r->right, filePath, folderName);
-		r = Balance(r);
+	else if (folderName >= t->name) {
+		t->right = AddFolder(t->right, filePath, folderName);
+		t = Balance(t);
 	}
-	return r;
+	return t;
 }
 
-File* AVL_Tree::Insert(File* r, string name, int size = 0) {
-	if (r == NULL) {
-		r = new File;
-		r->parentFolder = "";
-		r->size = size;
-		r->name = name;
-		r->left = NULL;
-		r->right = NULL;
-		return r;
+File* AVL_Tree::Insert(File* t, string name, int size = 0) {
+	if (t == NULL) {
+		t = new File;
+		t->parentFolder = "";
+		t->size = size;
+		t->name = name;
+		t->left = NULL;
+		t->right = NULL;
+		return t;
 	}
-	else if (name < r->name) {
-		r->left = Insert(r->left, name, size);
-		r = Balance(r);
+	else if (name < t->name) {
+		t->left = Insert(t->left, name, size);
+		t = Balance(t);
 	}
-	else if (name >= r->name) {
-		r->right = Insert(r->right, name, size);
-		r = Balance(r);
+	else if (name >= t->name) {
+		t->right = Insert(t->right, name, size);
+		t = Balance(t);
 	}
-	return r;
+	return t;
 }
 
 int AVL_Tree::Height(File* t) {

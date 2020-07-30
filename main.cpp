@@ -16,12 +16,14 @@ int main() {
 	fl = FileSystem.AddFile(fl, "documents/programming/data_struct", "assignment2", 15);
 	//FileSystem.inorder(fl);
 	cout << endl;
+
 	wanted = FileSystem.GetFile(fl, "documents/programming/data_struct", "assignment1");
 	//cout << wanted.name << endl;
+	FileSystem.DeleteFile(fl, "documents/programming/data_struct", "assignment2");
 	files = FileSystem.GetFiles(files, fl, "documents /programming/data_struct", "assi");
-	for (auto v : files)							//These two lines are just for printing
+	for (auto v : files) {							//These two lines are just for printing
 		std::cout << v.name << "\n";				//out the list of files
-	
+	}
 	
 	
 
