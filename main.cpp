@@ -6,7 +6,7 @@ int main() {
 	File wanted;
 	list<File> files;
 
-	//documents/programming/data_struct/project
+	//documents/programming/data_struct/project/assignment1
 
 	fl = FileSystem.AddFolder(fl, "", "documents");
 	fl = FileSystem.AddFolder(fl, "documents", "programming");
@@ -22,8 +22,9 @@ int main() {
 	FileSystem.DeleteFile(fl, "documents/programming/data_struct", "assignment2");
 	files = FileSystem.GetFiles(files, fl, "documents /programming/data_struct", "assi");
 	for (auto v : files) {							//These two lines are just for printing
-		std::cout << v.name << "\n";				//out the list of files
+		cout << v.name << "\n";						//out the list of files
 	}
+	
 	
 	
 
