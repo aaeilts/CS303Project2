@@ -56,6 +56,8 @@ public:
 	list<File> GetFiles(list<File> files, File* t, string path, string fileName);					//DONE 
 	void DeleteFile(File* t, string path, string fileName);											//Come back
 
+	void AddSize(File* r, string filename, int newsize);
+	void LessSize(File* r, string filename, int newsize);
 	string ParsePath(string path);
 	void ChangeSize(); //Goes in add file function, 
 };
@@ -106,6 +108,29 @@ void AVL_Tree::DeleteFile(File* t, string path, string fileName) {
 			DeleteFile(t->right, path, temp->name);
 
 		}
+	}
+}
+
+// adds file size to appliciable folders
+void AVL_Tree::AddSize(File * r, string filename, int newsize) {
+
+	if (r->parentFolder == "") { //basecase 
+		r->size += newsize;
+	}
+	else {
+		r->size += newsize;
+		AddSize(r, r->parentFolder, newsize);
+	}
+}
+
+//removes size when file is delted to appliciable folders
+void AVL_Tree::LessSize(File* r, string filename, int newsize) {
+	if (r->parentFolder == "") { //basecase 
+		r->size -= newsize;
+	}
+	else {
+		r->size -= newsize;
+		AddSize(r, r->parentFolder, newsize);
 	}
 }
 
