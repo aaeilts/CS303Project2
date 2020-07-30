@@ -12,8 +12,8 @@ int main() {
 	fl = FileSystem.AddFolder(fl, "documents", "programming");
 	fl = FileSystem.AddFolder(fl, "documents/programming", "data_struct");
 	fl = FileSystem.AddFolder(fl, "documents/programming/data_struct", "project");
-	fl = FileSystem.AddFile(fl, "documents/programming/data_struct", "assignment1", 10);
-	fl = FileSystem.AddFile(fl, "documents/programming/data_struct", "assignment2", 15);
+	fl = FileSystem.AddFile(fl, "documents/programming/data_struct/project", "assignment1", 10);
+	fl = FileSystem.AddFile(fl, "documents/programming/data_struct/project", "assignment2", 15);
 	//FileSystem.inorder(fl);
 	cout << endl;
 
