@@ -19,7 +19,7 @@ struct File {
 	}
 	File();
 	File(string parent, string name, int size);
-	
+
 }*fl;
 bool operator==(File& file1, File& file2) { //Comparison overload for comparing names
 	return (file1.name == file2.name);
@@ -30,7 +30,7 @@ File::File() {
 	right = NULL;
 };
 
-File::File(string name, string parent = "", int size=0) {
+File::File(string name, string parent = "", int size = 0) {
 	this->parentFolder = parent;
 	this->name = name;
 	this->size = size;
@@ -48,7 +48,7 @@ public:
 	File* LR_Rotate(File*);
 	File* RL_Rotate(File*);
 	File* Balance(File*);
-	File* Insert(File*, string, int);				
+	File* Insert(File*, string, int);
 	void inorder(File*);
 
 	File* AddFolder(File* t, string path, string folderName);										//DONE 
@@ -132,7 +132,7 @@ vector<string> AVL_Tree::ParsePath(string path) {
 	return folderNames;
 }
 
-list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fileName) {  
+list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fileName) {
 	if (t->left != NULL && t->right != NULL) {
 		if ((t->left->name.substr(0, fileName.size()) == fileName) && (t->right->name.substr(0, fileName.size()) == fileName)) {
 			File r;
@@ -152,7 +152,7 @@ list<File> AVL_Tree::GetFiles(list<File> files, File* t, string path, string fil
 		return files;
 	}
 	else if (fileName < t->name.substr(0, fileName.size())) {  //If less than search term
-		 return GetFiles(files, t->left, path, fileName);
+		return GetFiles(files, t->left, path, fileName);
 	}
 	else if (fileName > t->name.substr(0, fileName.size())) {  //Greater than search term
 		return GetFiles(files, t->right, path, fileName);
@@ -178,30 +178,29 @@ File AVL_Tree::GetFile(File* t, string path, string fileName) {		//GOOD ONE
 	else if (fileName < t->name) {
 		r = GetFile(t->left, parentName, fileName);
 	}
-	else if (fileName >= t->name){
+	else if (fileName >= t->name) {
 		r = GetFile(t->right, parentName, fileName);
 	}
 	return r;
 }
 
 File* AVL_Tree::GetFile2(File* t, string path, string fileName) {
-	string parentName;
-	File r; File* tCopy;
-	tCopy = t;
+	string parentName, nodeName;
+	File r;
 	parentName = ParsePath(path).back();
-	if (tCopy->name == fileName) {               //Error here
-		return t; 
+	if (t->name == parentName) {               //Error here
+		return t;
 	}
-	else if (fileName < tCopy->name) {
-		tCopy = GetFile2(tCopy->left, parentName, fileName);
+	else if (fileName < t->name) {
+		t = GetFile2(t->left, parentName, fileName);
 	}
-	else if (fileName >= tCopy->name) {
-		tCopy = GetFile2(tCopy->right, parentName, fileName);
+	else if (fileName >= t->name) {
+		t = GetFile2(t->right, parentName, fileName);
 	}
-	return tCopy;
+	return t;
 }
- 
-File* AVL_Tree::AddFile(File* t, string path, string fileName, int size=0) {
+
+File* AVL_Tree::AddFile(File* t, string path, string fileName, int size = 0) {
 	//string filePath;
 	folderNames.clear();
 	folderNames = ParsePath(path);
@@ -214,7 +213,7 @@ File* AVL_Tree::AddFile(File* t, string path, string fileName, int size=0) {
 		t->left = NULL;
 		t->right = NULL;
 		folderNames.pop_back();
-		
+
 		//AddSize(r, path, fileName, size);
 		return t;
 	}
@@ -229,14 +228,14 @@ File* AVL_Tree::AddFile(File* t, string path, string fileName, int size=0) {
 	}
 	else if (fileName >= t->name) {
 		string path2;
-		for(int i = 0; i < folderNames.size() - 1; i++) {
+		for (int i = 0; i < folderNames.size() - 1; i++) {
 			path2 += folderNames.at(i) + "/";  //Add a slash
 		}
 		path2 += folderNames.back();
 		t->right = AddFile(t->right, path2, fileName, size);
 		t = Balance(t);
 	}
-	UpdateSizesPlus(t, path, fileName);
+	//UpdateSizesPlus(t, path, fileName);
 	return t;
 }
 
@@ -255,16 +254,12 @@ void AVL_Tree::UpdateSizesPlus(File* t, string path, string FileName) {
 	}
 }
 
-
-
-
-
 //Adds a folder given the path
-File* AVL_Tree::AddFolder(File* t, string path, string folderName) {      
+File* AVL_Tree::AddFolder(File* t, string path, string folderName) {
 	//string filePath;
 	folderNames.clear();
 	folderNames = ParsePath(path);
-	if (t == NULL) {			
+	if (t == NULL) {
 		t = new File;
 		t->parentFolder = folderNames.back();
 		folderNames.pop_back();
@@ -276,7 +271,7 @@ File* AVL_Tree::AddFolder(File* t, string path, string folderName) {
 	}
 	else if (folderName < t->name) {
 		string path2 = "";
-		for (int i = 0; i < folderNames.size()- 1; i++) {
+		for (int i = 0; i < folderNames.size() - 1; i++) {
 			path2 += folderNames.at(i) + "/";  //Add a slash
 		}
 		path2 += folderNames.back();
@@ -296,8 +291,6 @@ File* AVL_Tree::AddFolder(File* t, string path, string folderName) {
 	}
 	return t;
 }
-
-
 
 
 File* AVL_Tree::Insert(File* t, string name, int size = 0) {
@@ -391,15 +384,13 @@ File* AVL_Tree::Balance(File* t) {
 }
 
 void AVL_Tree::inorder(File* t) {
-	if (t == NULL)						
-		return;							
-	inorder(t->left);					
-	cout << t->name << " ";				
-	inorder(t->right);					
+	if (t == NULL)
+		return;
+	inorder(t->left);
+	cout << t->name << " " << t->size << " : ";
+
+	inorder(t->right);
 }
-
-
-
 
 
 //documents/programming/data_struct/project   /assignment1 = 10
@@ -410,11 +401,9 @@ void AVL_Tree::inorder(File* t) {
 		return t;
 	}
 	else if (fileName < t->name) {
-
 		t = GetFolder(t->left, parentName, fileName);
 	}
 	else if (fileName >= t->name) {
-
 		t = GetFolder(t->right, parentName, fileName);
 	}
 	return t;
@@ -422,7 +411,6 @@ void AVL_Tree::inorder(File* t) {
 
 // adds file size to appliciable folders
 /*void AVL_Tree::AddSize(File* r, string path, string filename, int newsize) {
-
 	if ( r->parentFolder == "") { //base case
 		r->size += newsize;
 	}
@@ -445,4 +433,4 @@ void AVL_Tree::inorder(File* t) {
 		r = GetFolder(r, path, r->parentFolder);
 		LessSize(r, path, r->name, newsize);
 	}
-}*/
+}*/#pragma once
